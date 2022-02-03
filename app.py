@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from utills import get_settings, get_candidate_by_cid, get_candidates
+from utills import get_settings, get_candidate_by_cid, get_candidates, search_candidate_by_name, search_candidate_by_skill
 
 app = Flask(__name__)
 
@@ -40,14 +40,36 @@ def page_list_of_candidates():
 
 
 
-@app.route('/search?name=<x>')
-def name_search(x):
-    pass
+@app.route('/search')
+def page_search_name():
+    name = request.args.get('name', '')
+
+    candidates = search_candidate_by_name(name)
+    candidates_count = len(candidates)
+
+    page_content = f"<h2>Найдено кандидатов: {candidates_count}</h2>"
+
+    for candidate in candidates:
+        page_content += f"""
+                <p><a href="/candidate/{candidate['id']}">{candidate['name']}</a></p>
+                """
+
+    return page_content
 
 
-@app.route('/skill/<x>')
-def skill_search(x):
-    pass
+@app.route('/skill/<skill_name>')
+def page_search_skill(skill_name):
+    candidates = search_candidate_by_skill(skill_name)
+    candidates_count = len(candidates)
+
+    page_content = f"<h2>Найдено со скиллом {skill_name}: {candidates_count}</h2>"
+
+    for candidate in candidates:
+        page_content += f"""
+                    <p><a href="/candidate/{candidate['id']}">{candidate['name']}</a></p>
+                    """
+
+    return page_content
 
 
 if __name__ == "__main__":
