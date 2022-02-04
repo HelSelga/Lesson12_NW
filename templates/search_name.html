@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Search by name</title>
+    </head>
+    <body>
+        {% for candidate in profiles %}
+            {% if name in candidate['name'] %}
+                <h2>Найдено кандидатов:</h2>
+                <p><a href="/candidate/{{ candidate['id'] }}">{{ candidate['name'] }}</a></p>
+            {% endif %}
+            {% if not case_sensitive %}
+                {% if name.lower() in candidate['name'].lower() %}
+                    <h2>Найдено кандидатов:</h2>
+                    <p><a href="/candidate/{{ candidate['id'] }}">{{ candidate['name'] }}</a></p>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </body>
+</html>
